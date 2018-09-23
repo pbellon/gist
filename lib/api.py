@@ -8,35 +8,27 @@ import sys
 from .decorators import with_commands, command, command_arg
 from . import env
 
-gist_id = command_arg('gist', nargs=1, type=str,
+gist_id_arg = command_arg('gist', nargs=1, type=str,
     help='ID of the gist to delete (e.g: aa5a315d61ae9438b18d)'
 )
 
 @with_commands(description="Use gist api with a CLI.")
 class GistApi:
     API_URL = "https://api.github.com"
-    access_token = env.ACCESS_TOKEN
+    token = env.ACCESS_TOKEN
 
-    def scope_params(self):
-        return { 'scope': 'gist' }
+    def scope_params(self): return { 'scope': 'gist' }
 
-    def auth_header(self):
-        return { 'Authorization': "token %s" % self.access_token }
+    def auth_header(self): return { 'Authorization': "token %s" % self.token }
 
-    @command(
-        name='show', help='Show details of a gist',
-        args=(gist_id,)
-    )
+    @command(name='show', help='Show details of a gist',args=(gist_id_arg,))
     def show(self, gist):
         url = "{base}/gists/{id}".format(base=self.API_URL, id=gist[0])
         req = requests.get(url, params=self.scope_params(),
             headers=self.auth_header())
         return req.json()
 
-    @command(
-        name='delete', help='Delete a gist',
-        args=(gist_id,)
-    )
+    @command(name='delete', help='Delete a gist', args=(gist_id_arg,))
     def delete(self, gist):
         id = gist[0]
         url = "{base}/gists/{id}".format(base=self.API_URL, id=id)
@@ -50,10 +42,7 @@ class GistApi:
             ) % id
         }
 
-    @command(
-        name='list',
-        help='List your gist'
-    )
+    @command(name='list', help='List your gist')
     def list(self):
         url = '%s/gists' % self.API_URL
         req = requests.get(url,
@@ -70,8 +59,7 @@ class GistApi:
         )
 
     @command(
-        name='create',
-        help='Creates a gist, data took from stdin or a file',
+        name='create', help='Creates a gist, data took from stdin or a file',
         args=(
             command_arg('-f', '--file',
                 help='Create gist from file, otherwise will use stdin',

@@ -78,6 +78,9 @@ def with_commands(description):
                 self.description = description
                 self.bindings = self.list_bindings()
                 self.parser = argparse.ArgumentParser(description=description)
+                self.add_commands()
+                self.parse_args()
+
 
             def __getattribute__(self, attr):
                 _attr = None
@@ -86,10 +89,6 @@ def with_commands(description):
                 if _attr is None:
                     _attr = self.instance.__getattribute__(self.instance, attr)
                 return _attr
-
-            def run(self):
-                self.add_commands()
-                self.parse_args()
 
             def add_commands(self):
                 bindings = self.bindings.items()
