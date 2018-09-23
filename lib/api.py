@@ -1,4 +1,3 @@
-import twitter
 import json
 import requests
 import argparse
