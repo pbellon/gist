@@ -21,13 +21,9 @@ def command_arg(*args, **kwargs):
 
 class Command(object):
     def __init__(self, name, help, args):
-        self.delegate = None
         self.help = help
         self.name = name
         self.args = args
-
-    def add_delegate(self, delegate):
-        self.delegate = delegate
 
     def has_arguments(self):
         return len(self.args) > 0
@@ -49,8 +45,6 @@ def command(name='', help=None, args=list()):
     def decorated(func):
         def wrapper(*args, **kwargs):
             return func(*args, **kwargs)
-
-        command.add_delegate(wrapper)
         setattr(wrapper, 'command', command)
         return wrapper
     return decorated
