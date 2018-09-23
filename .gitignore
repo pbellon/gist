@@ -1,0 +1,7 @@
+# the proper env settings 
+env.py
+# vim files
+*.swo
+*.swp
+*.swn
+__pycache__/
