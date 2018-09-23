@@ -7,8 +7,8 @@ pip
 
 ## Installation
 ```sh
-git clone https://github.com/pbellon/tw.git
-cd tw
+git clone https://github.com/pbellon/gist.git
+cd gist
 pip install -r requirement.txt
 ```
 
