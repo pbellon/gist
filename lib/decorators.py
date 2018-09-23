@@ -106,8 +106,8 @@ def with_commands(description):
                     command = binding.command
                     method = binding.method
                     kwargs = command.process_kwargs(args)
-                    json_result = getattr(self.instance, args.command)(**kwargs)
-                    print(json.dumps(json_result, indent=4))
+                    # method execution
+                    getattr(self.instance, args.command)(**kwargs)
                 else:
                     self.parser.print_help()
 
