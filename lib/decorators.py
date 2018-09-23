@@ -4,8 +4,11 @@ import json
 
 from .utils import as_obj
 
-
 def command_arg(*args, **kwargs):
+    """
+    Small tweak to build argparse.add_argument() arguments through a command
+    declaration (see `command` decorator and `Command.add_arguments` method)
+    """
     class CommandArg:
         def __init__(self, *args, **kwargs):
             self.args = args
@@ -21,6 +24,11 @@ def command_arg(*args, **kwargs):
 
 
 class Command(object):
+    """
+    The Command object represent a given action. In fine, its goal is to make
+    the argparse.ArgumentParser parsing result in the calling of the method that
+    used the @command decorator.
+    """
     def __init__(self, name, help, args):
         self.help = help
         self.name = name
@@ -43,12 +51,13 @@ class Command(object):
                 kwargs[argname] = getattr(args, argname)
         return kwargs
 
-"""
-@command() decorator. Used to register a sub command for argparse.
-To register arguments just use the command_arg() helper as you would with
-parser.add_argument() arguments.
-"""
+
 def command(name='', help=None, args=list()):
+    """
+    @command() decorator. Used to register a sub command for argparse.
+    To register arguments just use the command_arg() helper as you would with
+    parser.add_argument() arguments.
+    """
     command = Command(name=name, help=help, args=args)
     def decorated(func):
         def wrapper(*args, **kwargs):
@@ -57,12 +66,11 @@ def command(name='', help=None, args=list()):
         return wrapper
     return decorated
 
-
-"""
-Register a class as a commanded class. All methods marked with the @command()
-decorator will be be piloted from here.
-"""
 def with_commands(description):
+    """
+    Register a class as a commanded class. All methods marked with the @command()
+    decorator will be be piloted from here.
+    """
     def wrapped(Cls):
         class CommandedCls:
             def __init__(self, *args, **kwargs):
@@ -90,7 +98,7 @@ def with_commands(description):
                     command = binding.command
                     command_parser = subparsers.add_parser(key, help=command.help)
                     command_parser.set_defaults(command=key)
-                    if command.has_arguments(): command.add_arguments(command_parser)
+                    command.add_arguments(command_parser)
 
             def parse_args(self):
                 args = self.parser.parse_args()
@@ -107,10 +115,20 @@ def with_commands(description):
             def is_valid_name(self, name): return not name.startswith('__')
 
             def is_decorated(self, name):
+                """
+                Check if a given command name is a decorated method
+                """
                 method = getattr(self.instance, name)
                 return getattr(method, 'command', None) is not None
 
             def list_bindings(self):
+                """
+                Will return all decorated methods as a dict:
+                {
+                    <command name>: object(method=<bound api method>, command=<bound command object>),
+                    ...
+                }
+                """
                 all_command_names = filter(
                     self.is_decorated, filter(
                         self.is_valid_name,
