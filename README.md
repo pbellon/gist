@@ -21,14 +21,17 @@ Then edit env.py to add the proper key & secrets. To obtain them visit [twitter 
 
 ## Usage
 ```
-usage: python gist.py [-h] [--retweets] [--timeline]
+usage: gist.py [-h] {create,list} ...
 
-Small utility to retrieve tweets as JSON from twitter api.
+Use gist api with a CLI.
+
+positional arguments:
+  {create,list}
+    create       Creates a gist, data took from stdin or a file (see --file)
+    list         List your gist
 
 optional arguments:
-  -h, --help  show this help message and exit
-  --retweets  Get user latest retweets
-  --timeline  Get user timeline (limited)
+  -h, --help     show this help message and exit
 ```
 
 Exemple:
