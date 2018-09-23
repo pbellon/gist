@@ -2,7 +2,8 @@ import argparse
 import sys
 import json
 
-from .utils import as_obj, add_method, POJO
+from .utils import as_obj
+
 
 def command_arg(*args, **kwargs):
     class CommandArg:
@@ -28,7 +29,6 @@ class Command(object):
     def has_arguments(self):
         return len(self.args) > 0
 
-    # Adds the command arguments to the argument parser.
     def add_arguments(self, parser):
         for arg in self.args:
             parser.add_argument(*arg.args, **arg.kwargs)

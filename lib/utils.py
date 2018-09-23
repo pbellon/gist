@@ -1,6 +1,7 @@
-class POJO: pass
+# Python Object
+class PO: pass
 def as_obj(dc):
-    obj = POJO()
+    obj = PO()
     for key, val in dc.items(): setattr(obj, key, val)
     return obj
 
