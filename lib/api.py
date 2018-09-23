@@ -42,7 +42,7 @@ class GistApi:
         url = "{base}/gists/{id}".format(base=self.API_URL, id=id)
         req = requests.delete(url, params=self.scope_params(),
             headers=self.auth_header())
-            
+
         deleted = req.status_code == 204
         return { "result": (
                 "Deleted gist %s" if deleted else (
@@ -93,7 +93,6 @@ class GistApi:
         if gist_name is None:
             gist_name = file.name
 
-        print("Content has %s chars" % len(content))
         req = requests.post(url = "%s/gists" % self.API_URL,
             headers=self.auth_header(),
             params=self.scope_params(),
